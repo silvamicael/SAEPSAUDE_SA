@@ -6,6 +6,7 @@ import atividadeRoutes from "./routes/atividade.routes.js";
 import usuarioRoutes from "./routes/usuario.routes.js";
 import curtidaRoutes from "./routes/curtida.routes.js";
 import comentarioRoutes from "./routes/comentario.routes.js";
+import empresaRoutes from "./routes/empresa.routes.js";
 
 const app = express();
 app.use(express.json());
@@ -13,6 +14,7 @@ app.use(atividadeRoutes);
 app.use(usuarioRoutes);
 app.use(curtidaRoutes);
 app.use(comentarioRoutes);
+app.use(empresaRoutes);
 
 app.get("/", (req, res) => {
     res.json({
