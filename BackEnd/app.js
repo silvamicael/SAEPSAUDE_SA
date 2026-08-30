@@ -5,12 +5,14 @@ import "./models/associacoes.model.js";
 import atividadeRoutes from "./routes/atividade.routes.js";
 import usuarioRoutes from "./routes/usuario.routes.js";
 import curtidaRoutes from "./routes/curtida.routes.js";
+import comentarioRoutes from "./routes/comentario.routes.js";
 
 const app = express();
 app.use(express.json());
 app.use(atividadeRoutes);
 app.use(usuarioRoutes);
 app.use(curtidaRoutes);
+app.use(comentarioRoutes);
 
 app.get("/", (req, res) => {
     res.json({
