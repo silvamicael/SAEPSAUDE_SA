@@ -2,10 +2,9 @@ import { Atividade, Usuario, Curtida, Comentario } from "../models/associacoes.m
 
 export async function listarAtividades(req, res) {
     try {
-        const { tipo, pagina = 1 } = req.query;
+        const { tipo, pagina = 1, usuario_id } = req.query;
         const limite = 4;
         const offset = (pagina - 1) * limite;
-
         const where = tipo ? { tipo_atividade: tipo } : {};
 
         const { count, rows } = await Atividade.findAndCountAll({
@@ -17,24 +16,27 @@ export async function listarAtividades(req, res) {
         });
 
         const atividades = await Promise.all(
-            rows.map(async (atividade) => ({
-                id: atividade.id,
-                tipo: atividade.tipo_atividade,
-                distancia: atividade.distancia_percorrida,
-                duracao: atividade.duracao_atividade,
-                calorias: atividade.quantidade_calorias,
-                data: atividade.createdAt,
-                usuario: atividade.usuario,
-                curtidas: await Curtida.count({ where: { atividade_id: atividade.id } }),
-                comentarios: await Comentario.count({ where: { atividade_id: atividade.id } })
-            }))
+            rows.map(async (atividade) => {
+                const jaCurtiu = usuario_id
+                    ? (await Curtida.count({ where: { atividade_id: atividade.id, usuario_id } })) > 0
+                    : false;
+
+                return {
+                    id: atividade.id,
+                    tipo: atividade.tipo_atividade,
+                    distancia: atividade.distancia_percorrida,
+                    duracao: atividade.duracao_atividade,
+                    calorias: atividade.quantidade_calorias,
+                    data: atividade.createdAt,
+                    usuario: atividade.usuario,
+                    curtidas: await Curtida.count({ where: { atividade_id: atividade.id } }),
+                    comentarios: await Comentario.count({ where: { atividade_id: atividade.id } }),
+                    jaCurtiu
+                };
+            })
         );
 
-        res.json({
-            atividades,
-            paginaAtual: Number(pagina),
-            totalPaginas: Math.ceil(count / limite)
-        });
+        res.json({ atividades, paginaAtual: Number(pagina), totalPaginas: Math.ceil(count / limite) });
 
     } catch (error) {
         console.error(error);
