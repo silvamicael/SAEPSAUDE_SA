@@ -2,9 +2,13 @@ import "dotenv/config";
 import express from "express";
 import sequelize from "./config/database.js";
 import "./models/associacoes.model.js";
+import atividadeRoutes from "./routes/atividade.routes.js";
+import usuarioRoutes from "./routes/usuario.routes.js";
 
 const app = express();
 app.use(express.json());
+app.use(atividadeRoutes);
+app.use(usuarioRoutes);
 
 app.get("/", (req, res) => {
     res.json({
