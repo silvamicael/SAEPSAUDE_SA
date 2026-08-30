@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import sequelize from "./config/database.js";
-import "./models/associations.js";
+import "./models/associacoes.model.js";
 
 const app = express();
 
