@@ -4,6 +4,7 @@ import sequelize from "./config/database.js";
 import "./models/associacoes.model.js";
 
 const app = express();
+app.use(express.json());
 
 app.get("/", (req, res) => {
     res.json({
