@@ -1,67 +1,77 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AtividadeCard from "./AtividadeCard";
-
-const atividadesMock = [
-  {
-    id: 1,
-    tipo: "corrida",
-    usuario: { nome: "Usuário_01", imagem: "/avatars/usuario01.jpg" },
-    distancia: 10000,
-    duracao: 50,
-    calorias: 350,
-    curtidas: 4,
-    comentarios: 4,
-    jaCurtiu: false,
-  },
-  {
-    id: 2,
-    tipo: "trilha",
-    usuario: { nome: "Usuário_02", imagem: "/avatars/usuario02.jpg" },
-    distancia: 10000,
-    duracao: 50,
-    calorias: 350,
-    curtidas: 5,
-    comentarios: 4,
-    jaCurtiu: true,
-  },
-];
+import { listarAtividades } from "../services/api";
 
 function Main() {
-  const [filtroAtivo, setFiltroAtivo] = useState(null);
+    const [atividades, setAtividades] = useState([]);
+    const [filtroAtivo, setFiltroAtivo] = useState(null);
+    const [pagina, setPagina] = useState(1);
+    const [totalPaginas, setTotalPaginas] = useState(1);
+    const [carregando, setCarregando] = useState(true);
 
-  return (
-    <main className="main">
-      <header className="main-header">
-        <button className="botao-login">Login</button>
-      </header>
+    useEffect(() => {
+        setCarregando(true);
+        listarAtividades({ tipo: filtroAtivo, pagina })
+            .then((dados) => {
+                setAtividades(dados.atividades);
+                setTotalPaginas(dados.totalPaginas);
+            })
+            .catch((erro) => console.error("Erro ao buscar atividades:", erro))
+            .finally(() => setCarregando(false));
+    }, [filtroAtivo, pagina]);
 
-      <nav className="filtros">
-        {["corrida", "caminhada", "trilha"].map((tipo) => (
-          <button
-            key={tipo}
-            className={filtroAtivo === tipo ? "filtro ativo" : "filtro"}
-            onClick={() => setFiltroAtivo(tipo)}
-          >
-            {tipo}
-          </button>
-        ))}
-      </nav>
+    function selecionarFiltro(tipo) {
+        setFiltroAtivo(tipo);
+        setPagina(1);
+    }
 
-      <section className="lista-atividades">
-        {atividadesMock.map((atividade) => (
-          <AtividadeCard key={atividade.id} atividade={atividade} />
-        ))}
-      </section>
+    return (
+        <main className="main">
+            <header className="main-header">
+                <button className="botao-login">Login</button>
+            </header>
 
-      <footer className="paginacao">
-        <button>Anterior</button>
-        <button className="pagina ativa">1</button>
-        <button className="pagina">2</button>
-        <button className="pagina">3</button>
-        <button>Próximo</button>
-      </footer>
-    </main>
-  );
+            <nav className="filtros">
+                {["corrida", "caminhada", "trilha"].map((tipo) => (
+                    <button
+                        key={tipo}
+                        className={filtroAtivo === tipo ? "filtro ativo" : "filtro"}
+                        onClick={() => selecionarFiltro(tipo)}
+                    >
+                        {tipo}
+                    </button>
+                ))}
+            </nav>
+
+            <section className="lista-atividades">
+                {carregando ? (
+                    <p>Carregando...</p>
+                ) : (
+                    atividades.map((atividade) => (
+                        <AtividadeCard key={atividade.id} atividade={atividade} />
+                    ))
+                )}
+            </section>
+
+            <footer className="paginacao">
+                <button disabled={pagina === 1} onClick={() => setPagina((p) => p - 1)}>
+                    Anterior
+                </button>
+                {Array.from({ length: totalPaginas }, (_, i) => i + 1).map((numero) => (
+                    <button
+                        key={numero}
+                        className={numero === pagina ? "pagina ativa" : "pagina"}
+                        onClick={() => setPagina(numero)}
+                    >
+                        {numero}
+                    </button>
+                ))}
+                <button disabled={pagina === totalPaginas} onClick={() => setPagina((p) => p + 1)}>
+                    Próximo
+                </button>
+            </footer>
+        </main>
+    );
 }
 
 export default Main;

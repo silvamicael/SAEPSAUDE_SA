@@ -1,4 +1,5 @@
 import "dotenv/config";
+import cors from "cors";
 import express from "express";
 import sequelize from "./config/database.js";
 import "./models/associacoes.model.js";
@@ -9,12 +10,13 @@ import comentarioRoutes from "./routes/comentario.routes.js";
 import empresaRoutes from "./routes/empresa.routes.js";
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(atividadeRoutes);
 app.use(usuarioRoutes);
 app.use(curtidaRoutes);
-app.use(comentarioRoutes);
 app.use(empresaRoutes);
+app.use(comentarioRoutes);
 
 app.get("/", (req, res) => {
     res.json({
