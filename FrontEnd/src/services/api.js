@@ -28,3 +28,9 @@ export async function curtirAtividade(atividadeId, usuarioId) {
   });
   return resposta.json();
 }
+
+export async function getPerfil(usuarioId) {
+  const params = usuarioId ? `?usuario_id=${usuarioId}` : "";
+  const resposta = await fetch(`${BASE_URL}/perfil${params}`);
+  return resposta.json();
+}

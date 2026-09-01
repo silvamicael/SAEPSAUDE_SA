@@ -1,3 +1,4 @@
+/* ---------- Reset e variáveis ---------- */
 :root {
   --cor-escura: #333333;
   --cor-clara: #FFFFFF;
@@ -71,6 +72,11 @@ img {
   align-items: center;
   justify-content: center;
   gap: 8px;
+}
+
+.botao-atividade:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .icone-botao {
@@ -215,6 +221,7 @@ img {
   height: 20px;
 }
 
+/* ---------- Paginação ---------- */
 .paginacao {
   display: flex;
   justify-content: center;
@@ -225,4 +232,75 @@ img {
 .pagina.ativa {
   background: var(--cor-destaque);
   color: var(--cor-clara);
+}
+
+/* ---------- Modal de login ---------- */
+.modal-fundo {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-login {
+  background: var(--cor-clara);
+  padding: 24px;
+  border-radius: 8px;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.botao-fechar {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-login input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.input-erro {
+  border-color: var(--cor-erro) !important;
+}
+
+.mensagem-erro {
+  color: var(--cor-erro);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.modal-botoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.botao-cancelar {
+  background: transparent;
+  border: 1px solid var(--cor-escura);
+  color: var(--cor-escura);
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.botao-confirmar {
+  background: var(--cor-escura);
+  color: var(--cor-clara);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
 }
